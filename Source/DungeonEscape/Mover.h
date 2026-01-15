@@ -19,6 +19,8 @@ class DUNGEONESCAPE_API UMover : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UMover();
+    
+    
 
 protected:
 	// Called when the game starts
@@ -34,14 +36,22 @@ public:
     UPROPERTY(EditAnyWhere)
     float MoveTime = 4.0f;
     
-    UPROPERTY(EditAnyWhere)
-    bool ShouldMove = false;
-    
     UPROPERTY(VisibleAnyWhere)
     bool ReachedTarget;
     
     FVector TargetLocation;
     
     FVector StartLocation;
+    
+private:
+    
+    UPROPERTY(VisibleAnyWhere)
+    bool ShouldMove = false;
+    
+public:
+    
+    bool GetShouldMove();
+    
+    void SetShouldMove(bool NewShouldMove);
 		
 };

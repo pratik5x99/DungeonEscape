@@ -9,6 +9,7 @@ UTriggerComponent :: UTriggerComponent()
     
     IsPressurePlate = false;
     
+    IsTriggered = false;
     
 }
 
@@ -53,16 +54,37 @@ void UTriggerComponent :: TickComponent(float DeltaTime, ELevelTick TickType, FA
 
 void UTriggerComponent :: OnOverlapBegin(UPrimitiveComponent* OverlappedComp,AActor* OtherActor,UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    if(Mover)
+    if(OtherActor && OtherActor->ActorHasTag("PressurePlateActivator"))
     {
-        Mover->ShouldMove = true;
+        if(!IsTriggered)
+        {
+            Trigger(true);
+        }
+        
     }
+    
 }
 
 void UTriggerComponent :: OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+    if(OtherActor && OtherActor->ActorHasTag("PressurePlateActivator"))
+    {
+        if(IsTriggered)
+        {
+            Trigger(false);
+        }
+    }
+}
+
+void UTriggerComponent :: Trigger(bool NewTriggerValue)
+{
+    IsTriggered = NewTriggerValue;
+    
     if(Mover)
     {
-        Mover->ShouldMove = false;
+        Mover->SetShouldMove(IsTriggered);
+    }
+    else{
+        UE_LOG(LogTemp, Display, TEXT("%s does'nt have a Mover to trigger"),*GetOwner()->GetActorNameOrLabel())
     }
 }
